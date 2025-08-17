@@ -1,0 +1,38 @@
+name: ci-prepare-docker-build
+description: Prepares tags and versions file for Docker builds in CI workflows.
+author: aditor@gmail.com
+
+branding:
+  icon: eye
+  color: red
+inputs:
+  version-file:
+    description: The version file
+    required: false
+    default: version.json
+  trunk-branch:
+    description: The trunk branch name
+    required: false
+    default: main
+  default-trunk-version:
+    description: Default version to use if not set
+    required: false
+    default: '0.0.0'
+  default-feature-version:
+    description: Default version to use for feature branches
+    required: false
+    default: 'SHAPSHOT'
+
+outputs:
+  all-images:
+    description: All docker tags for docker build steps
+  new-tag:
+    description: Main tags for test and deploy steps
+  new-image:
+    description: New image name for test and deploy steps
+  report:
+    description: Prepare Docker Build Report
+
+runs:
+  using: node20
+  main: dist/index.js

@@ -1,0 +1,90 @@
+name: Continuous Integration
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  test-typescript:
+    name: TypeScript Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        id: checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        id: setup-node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .node-version
+          cache: npm
+
+      - name: Install Dependencies
+        id: npm-ci
+        run: npm ci
+
+      - name: Check Format
+        id: npm-format-check
+        run: npm run format:check
+
+      - name: Lint
+        id: npm-lint
+        run: npm run lint
+
+      - name: Test
+        id: npm-ci-test
+        run: npm run ci-test
+
+  test-action:
+    name: GitHub Actions Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        id: checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        id: setup-node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .node-version
+          cache: npm
+
+      - name: Install Dependencies
+        id: npm-install
+        run: npm ci
+
+      - name: Test Local Action
+        id: test-action
+        uses: ./
+        with:
+          version-file: version.json
+          trunk-branch: main
+          default-trunk-version: '0.0.0'
+          default-feature-version: 'SNAPSHOT'
+
+      - name: Print All Images Output
+        run: |
+          echo "All Images: ${{ steps.test-action.outputs.all-images }}"
+
+      - name: Print New Tag Output
+        run: |
+          echo "New Tag: ${{ steps.test-action.outputs.new-tag }}"
+
+      - name: Print New Image Output
+        run: |
+          echo "New Image: ${{ steps.test-action.outputs.new-image }}"
+
+      - name: Print Report Output
+        run: |
+          echo "Report: ${{ steps.test-action.outputs.report }}"
