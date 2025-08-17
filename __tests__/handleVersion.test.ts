@@ -15,6 +15,12 @@ describe('handleVersion', () => {
   beforeEach(() => {
     jest.clearAllMocks()
     github.context.sha = 'abcdef1234567890'
+    core.getInput.mockImplementation((key) => {
+      if (key === 'version-file') return 'version.json'
+      if (key === 'trunk-branch') return 'main'
+      if (key === 'default-trunk-version') return '1.2.3'
+      return ''
+    })
   })
 
   it('writes correct version.json and logs update', async () => {
