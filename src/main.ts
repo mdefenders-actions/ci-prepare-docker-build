@@ -2,7 +2,7 @@ import * as core from '@actions/core'
 import { generateMarkDown } from './markDown.js'
 import { getTags } from './getTags.js'
 import { TagsResult } from './types.js'
-import { handleVersion} from './handleVersion.js'
+import { handleVersion } from './handleVersion.js'
 
 /**
  * The main function for the action.

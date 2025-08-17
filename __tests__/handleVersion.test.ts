@@ -68,67 +68,38 @@ describe('handleVersion', () => {
   })
 
   it('logs info if git commit has no changes', async () => {
-    exec.mockImplementationOnce((_cmd, _args, options) => {
-      if (options && typeof options.listeners?.stdout === 'function') {
-        options.listeners.stdout(Buffer.from('test output'))
-      }
-      return Promise.resolve(0)
-    })
-    exec.mockImplementationOnce((_cmd, _args, options) => {
-      if (options && typeof options.listeners?.stdout === 'function') {
-        options.listeners.stdout(Buffer.from('test output'))
-      }
-      return Promise.resolve(0)
-    })
-    exec.mockImplementationOnce((_cmd, _args, options) => {
-      if (options && typeof options.listeners?.stdout === 'function') {
-        options.listeners.stdout(Buffer.from('test output'))
-      }
-      return Promise.resolve(0)
-    })
-    exec.mockImplementationOnce((_cmd, _args, options) => {
-      throw new Error('No changes to commit')
+    for (let i = 0; i < 3; i++) {
+      exec.mockImplementationOnce((_cmd, _args, options) => {
+        options?.listeners?.stdout?.(Buffer.from('test output'))
+        return Promise.resolve(0)
+      })
+    }
 
+    exec.mockImplementationOnce(() => {
+      throw new Error('No changes to commit')
     })
+
     exec.mockImplementationOnce((_cmd, _args, options) => {
-      if (options && typeof options.listeners?.stdout === 'function') {
-        options.listeners.stdout(Buffer.from('test output'))
-      }
+      options?.listeners?.stdout?.(Buffer.from('test output'))
       return Promise.resolve(0)
     })
+
     await handleVersion('1.2.3', '1.2.3-tag')
     expect(core.info).toHaveBeenCalledWith('No changes to commit')
   })
 
   it('logs info if git push has no changes', async () => {
-    exec.mockImplementationOnce((_cmd, _args, options) => {
-      if (options && typeof options.listeners?.stdout === 'function') {
-        options.listeners.stdout(Buffer.from('test output'))
-      }
-      return Promise.resolve(0)
-    })
-    exec.mockImplementationOnce((_cmd, _args, options) => {
-      if (options && typeof options.listeners?.stdout === 'function') {
-        options.listeners.stdout(Buffer.from('test output'))
-      }
-      return Promise.resolve(0)
-    })
-    exec.mockImplementationOnce((_cmd, _args, options) => {
-      if (options && typeof options.listeners?.stdout === 'function') {
-        options.listeners.stdout(Buffer.from('test output'))
-      }
-      return Promise.resolve(0)
-    })
-    exec.mockImplementationOnce((_cmd, _args, options) => {
-      if (options && typeof options.listeners?.stdout === 'function') {
-        options.listeners.stdout(Buffer.from('test output'))
-      }
-      return Promise.resolve(0)
-    })
-    exec.mockImplementationOnce((_cmd, _args, options) => {
-      throw new Error('No changes to push')
+    for (let i = 0; i < 4; i++) {
+      exec.mockImplementationOnce((_cmd, _args, options) => {
+        options?.listeners?.stdout?.(Buffer.from('test output'))
+        return Promise.resolve(0)
+      })
+    }
 
+    exec.mockImplementationOnce(() => {
+      throw new Error('No changes to push')
     })
+
     await handleVersion('1.2.3', '1.2.3-tag')
     expect(core.info).toHaveBeenCalledWith('No changes to push')
   })

@@ -13,7 +13,6 @@ jest.unstable_mockModule('fs/promises', () => fs)
 
 const { getTags } = await import('../src/getTags.js')
 
-
 // Helper to set up GitHub context for trunk branch
 function setupTrunkBranch() {
   github.context.repo = { owner: 'owner', repo: 'repo' }
@@ -116,7 +115,9 @@ describe('getTags', () => {
     github.context.repo = { owner: 'owner', repo: 'repo' }
     github.context.eventName = 'push'
     github.context.sha = 'abcdef1234567890'
-    process.env.GITHUB_REF_NAME = '!!!___...my--branch--name...___!!!'.repeat(10)
+    process.env.GITHUB_REF_NAME = '!!!___...my--branch--name...___!!!'.repeat(
+      10
+    )
     fs.readFile.mockResolvedValue(validVersionData)
     const result = await getTags()
     // Should be lowercased, special chars replaced, trimmed, and length <= 128

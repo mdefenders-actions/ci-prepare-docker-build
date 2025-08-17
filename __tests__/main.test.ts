@@ -46,14 +46,17 @@ describe('main.ts', () => {
     getTags.mockRejectedValueOnce(new Error('test error'))
     await run()
     expect(core.setFailed).toHaveBeenCalledWith('test error')
-    expect(core.error).toHaveBeenCalledWith('Action failed with error: test error')
+    expect(core.error).toHaveBeenCalledWith(
+      'Action failed with error: test error'
+    )
   })
 
   it('sets a failed status on unknown error', async () => {
     getTags.mockRejectedValueOnce('unknown error')
     await run()
     expect(core.setFailed).toHaveBeenCalledWith('Unknown error occurred')
-    expect(core.error).toHaveBeenCalledWith('Action failed with an unknown error')
+    expect(core.error).toHaveBeenCalledWith(
+      'Action failed with an unknown error'
+    )
   })
-
 })
