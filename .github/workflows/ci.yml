@@ -62,22 +62,28 @@ jobs:
 
       - name: Install Dependencies
         id: npm-install
-        run: npm install
+        run: npm ci
 
       - name: Test Local Action
         id: test-action
         uses: ./
         with:
-          runLint: true
-          runAudit: true
-          runTests: true
-          testCommand: 'npm run test:unit -- --coverage'
-          minCoverage: '65'
-          relativePath: '.'
+          version-file: version.json
+          trunk-branch: main
+          default-trunk-version: '0.0.0'
+          default-feature-version: 'SNAPSHOT'
 
-      - name: Print Coverage Output
+      - name: Print All Images Output
         run: |
-          echo "Coverage: ${{ steps.test-action.outputs.coverage }}"
+          echo "All Images: ${{ steps.test-action.outputs.all-images }}"
+
+      - name: Print New Tag Output
+        run: |
+          echo "New Tag: ${{ steps.test-action.outputs.new-tag }}"
+
+      - name: Print New Image Output
+        run: |
+          echo "New Image: ${{ steps.test-action.outputs.new-image }}"
 
       - name: Print Report Output
         run: |
