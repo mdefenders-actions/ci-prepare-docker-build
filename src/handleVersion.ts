@@ -15,11 +15,7 @@ export async function handleVersion(
   }
   const versionFile = core.getInput('version-file', { required: true })
 
-  await fs.writeFile(
-    versionFile,
-    JSON.stringify(data, null, 2) + '\n',
-    'utf-8'
-  )
+  await fs.writeFile(versionFile, JSON.stringify(data, null, 2) + '\n', 'utf-8')
   core.info(`${versionFile} updated: ${JSON.stringify(data)}`)
 
   // If version is not SNAPSHOT, commit the change using @actions/exec

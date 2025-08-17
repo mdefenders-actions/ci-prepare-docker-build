@@ -31340,8 +31340,9 @@ async function handleVersion(version, tag) {
         tag,
         commit
     };
-    await fs.writeFile('version.json', JSON.stringify(data, null, 2) + '\n', 'utf-8');
-    coreExports.info(`version.json updated: ${JSON.stringify(data)}`);
+    const versionFile = coreExports.getInput('version-file', { required: true });
+    await fs.writeFile(versionFile, JSON.stringify(data, null, 2) + '\n', 'utf-8');
+    coreExports.info(`${versionFile} updated: ${JSON.stringify(data)}`);
     // If version is not SNAPSHOT, commit the change using @actions/exec
     if (version !== 'SNAPSHOT') {
         // Check if version is valid SemVer before committing
@@ -31360,12 +31361,12 @@ async function handleVersion(version, tag) {
             'user.email',
             'github-actions[bot]@users.noreply.github.com'
         ]);
-        await execExports.exec('git', ['add', 'version.json']);
+        await execExports.exec('git', ['add', versionFile]);
         try {
             await execExports.exec('git', [
                 'commit',
                 '-m',
-                `github-actions[bot] version.json updated with image version ${version}`
+                `github-actions[bot] ${versionFile} updated with image version ${version}`
             ]);
         }
         catch {
@@ -31377,7 +31378,7 @@ async function handleVersion(version, tag) {
         catch {
             coreExports.info('No changes to push');
         }
-        coreExports.info('version.json committed and pushed to git');
+        coreExports.info(`${versionFile} committed and pushed to git`);
     }
 }
 
