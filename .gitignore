@@ -103,4 +103,3 @@ __tests__/runner/*
 .env
 samples
 step_summary
-version.json
