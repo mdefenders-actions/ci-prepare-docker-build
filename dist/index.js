@@ -31391,9 +31391,11 @@ async function run() {
     try {
         coreExports.startGroup('Getting Image tags');
         const result = await getTags();
+        coreExports.endGroup();
         coreExports.startGroup('Update version.json');
         await handleVersion(result.version, result.tag);
         coreExports.endGroup();
+        coreExports.startGroup('Generating Markdown Report');
         const markDownReport = await generateMarkDown(result);
         await coreExports.summary.addRaw(markDownReport, true).write();
         coreExports.setOutput('all-images', result.allImages);
