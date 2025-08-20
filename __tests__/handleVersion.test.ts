@@ -110,12 +110,12 @@ describe('handleVersion', () => {
     expect(core.info).toHaveBeenCalledWith('No changes to push')
   })
 
-  it('uses first 8 chars of commit SHA', async () => {
+  it('uses first 7 chars of commit SHA', async () => {
     github.context.sha = '1234567890abcdef'
     await handleVersion('1.2.3', '1.2.3-tag')
     expect(fs.writeFile).toHaveBeenCalledWith(
       'version.json',
-      expect.stringContaining('"commit": "12345678"'),
+      expect.stringContaining('"commit": "1234567"'),
       'utf-8'
     )
   })

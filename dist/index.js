@@ -31334,7 +31334,7 @@ async function getTags() {
 var execExports = requireExec();
 
 async function handleVersion(version, tag) {
-    const commit = githubExports.context.sha.slice(0, 8);
+    const commit = githubExports.context.sha.slice(0, 7);
     const data = {
         version,
         tag,
