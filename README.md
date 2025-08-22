@@ -1,6 +1,9 @@
 # CI Prepare Docker Build GitHub Action
 
-A GitHub Action for preparing Docker image tags and versioning in CI pipelines. This action reads your project's version file, increments the patch version, generates Docker-compatible tags, and updates version metadata. It is designed for TypeScript projects and integrates with GitHub Actions workflows.
+A GitHub Action for preparing Docker image tags and versioning in CI pipelines.
+This action reads your project's version file, increments the patch version,
+generates Docker-compatible tags, and updates version metadata. It is designed
+for TypeScript projects and integrates with GitHub Actions workflows.
 
 ## Features
 
@@ -20,24 +23,24 @@ Add the following step to your workflow:
   uses: <owner>/<repo>@<version>
   with:
     versionFile: './version.json' # Path to your version file
-    commitVersion: 'true'         # Commit version.json changes (default: false)
+    commitVersion: 'true' # Commit version.json changes (default: false)
 ```
 
 ### Inputs
 
-| Name          | Description                                      | Required | Default        |
-| ------------- | ------------------------------------------------ | -------- | --------------|
-| versionFile   | Path to the version file (e.g., version.json)    | true     |                |
-| commitVersion | Commit version.json changes (true/false)         | false    | false          |
+| Name          | Description                                   | Required | Default |
+| ------------- | --------------------------------------------- | -------- | ------- |
+| versionFile   | Path to the version file (e.g., version.json) | true     |         |
+| commitVersion | Commit version.json changes (true/false)      | false    | false   |
 
 ### Outputs
 
-| Name      | Description                                 |
-| --------- | ------------------------------------------- |
-| version   | The new version string                      |
-| tag       | Docker-compatible image tag                 |
-| commit    | First 8 chars of the current commit SHA     |
-| tags      | Array of generated Docker image tags        |
+| Name    | Description                             |
+| ------- | --------------------------------------- |
+| version | The new version string                  |
+| tag     | Docker-compatible image tag             |
+| commit  | First 8 chars of the current commit SHA |
+| tags    | Array of generated Docker image tags    |
 
 ## Example Workflow
 
