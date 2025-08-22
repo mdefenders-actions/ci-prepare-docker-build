@@ -7,7 +7,7 @@ export async function handleVersion(
   version: string,
   tag: string
 ): Promise<void> {
-  const commit = github.context.sha.slice(0, 8)
+  const commit = github.context.sha.slice(0, 7)
   const data = {
     version,
     tag,

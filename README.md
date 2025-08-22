@@ -1,42 +1,70 @@
-# CI Code Quality GitHub Action
+# CI Prepare Docker Build GitHub Action
 
-[![Coverage](./badges/coverage.svg)](./badges/coverage.svg)
-
-A GitHub Action for running tests and enforcing code coverage thresholds in
-TypeScript projects. This action is designed to be used in CI pipelines to
-ensure code quality and maintain high test coverage.
+A GitHub Action for preparing Docker image tags and versioning in CI pipelines.
+This action reads your project's version file, increments the patch version,
+generates Docker-compatible tags, and updates version metadata. It is designed
+for TypeScript projects and integrates with GitHub Actions workflows.
 
 ## Features
 
-- Runs your project's test suite
-- Collects and reports code coverage
-- Fails the workflow if coverage falls below a configurable threshold
-- Outputs a Markdown summary of the coverage report
-- Integrates with GitHub Actions logging and outputs
+- Reads and validates your version file
+- Increments patch version automatically
+- Generates Docker-compatible image tags from branch names
+- Updates version.json with version, tag, and commit SHA
+- Optionally commits version changes to your repository
+- Outputs tags and version info for downstream steps
 
 ## Usage
 
 Add the following step to your workflow:
 
 ```yaml
-- name: Run CI Code Quality
+- name: Prepare Docker Build
   uses: <owner>/<repo>@<version>
   with:
-    minCoverage: '80' # Minimum required coverage percentage
+    versionFile: './version.json' # Path to your version file
+    commitVersion: 'true' # Commit version.json changes (default: false)
 ```
 
 ### Inputs
 
-| Name        | Description                        | Required | Default |
-| ----------- | ---------------------------------- | -------- | ------- |
-| minCoverage | Minimum coverage percentage needed | true     |         |
+| Name          | Description                                   | Required | Default |
+| ------------- | --------------------------------------------- | -------- | ------- |
+| versionFile   | Path to the version file (e.g., version.json) | true     |         |
+| commitVersion | Commit version.json changes (true/false)      | false    | false   |
 
 ### Outputs
 
-| Name     | Description                        |
-| -------- | ---------------------------------- |
-| coverage | The actual coverage percentage     |
-| report   | Markdown-formatted coverage report |
+| Name    | Description                             |
+| ------- | --------------------------------------- |
+| version | The new version string                  |
+| tag     | Docker-compatible image tag             |
+| commit  | First 8 chars of the current commit SHA |
+| tags    | Array of generated Docker image tags    |
+
+## Example Workflow
+
+```yaml
+name: CI Docker Build
+on:
+  push:
+    branches:
+      - main
+      - 'release/*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Prepare Docker Build
+        uses: <owner>/<repo>@<version>
+        with:
+          versionFile: './version.json'
+          commitVersion: 'true'
+      - name: Build Docker Image
+        run: docker build -t ${{ steps.prepare.outputs.tag }} .
+```
 
 ## Development
 
@@ -52,42 +80,21 @@ npm install
 npm run test
 ```
 
-### Bundle for distribution
+### Bundle TypeScript
 
 ```bash
 npm run bundle
 ```
 
-### Project Structure
-
-- `src/` — TypeScript source code
-- `dist/` — Generated JavaScript (do not edit directly)
-- `__tests__/` — Unit tests (Jest)
-- `__fixtures__/` — Test fixtures
-
-## Tests
-
-Unit tests for `generateMarkDown` are located in `__tests__/markDown.test.ts`.
-
-Example test cases:
-
-- Returns Markdown with coverage and report
-- Returns Markdown with a default message if the report is empty
-- Handles zero coverage
-
-To run the tests:
-
-```bash
-npm run test
-```
-
 ## Contributing
 
-- Follow standard TypeScript/JavaScript best practices
-- Keep changes focused and minimal
-- Ensure all tests pass and coverage requirements are met
-- Update documentation as needed
+- Fork the repository and create your branch
+- Make changes following TypeScript and project conventions
+- Add or update tests in `__tests__` and fixtures in `__fixtures__`
+- Run `npm run test` and ensure all tests pass
+- Run `npm run bundle` to update the `dist` folder
+- Open a pull request with a clear description of your changes
 
 ## License
 
-See [LICENSE](./LICENSE).
+This project is licensed under the MIT License.

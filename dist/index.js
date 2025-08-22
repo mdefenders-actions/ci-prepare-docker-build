@@ -27284,7 +27284,7 @@ async function generateMarkDown(tagsRes) {
     let markDown = `### Image Repo:\n\n`;
     markDown += `[${tagsRes.allImages}](https://hub.docker.com/repository/docker/${tagsRes.repo}/tags/)\n\n`;
     markDown += `### Main Tag:\n\n`;
-    markDown += `[${tagsRes.repo}:${tagsRes.tag}](https://hub.docker.com/r/${tagsRes.repo}/tags?name=${tagsRes.tag}')\n\n`;
+    markDown += `[${tagsRes.repo}:${tagsRes.tag}](https://hub.docker.com/r/${tagsRes.repo}/tags?name=${tagsRes.tag})\n\n`;
     return markDown;
 }
 
@@ -31334,7 +31334,7 @@ async function getTags() {
 var execExports = requireExec();
 
 async function handleVersion(version, tag) {
-    const commit = githubExports.context.sha.slice(0, 8);
+    const commit = githubExports.context.sha.slice(0, 7);
     const data = {
         version,
         tag,
@@ -31391,9 +31391,11 @@ async function run() {
     try {
         coreExports.startGroup('Getting Image tags');
         const result = await getTags();
+        coreExports.endGroup();
         coreExports.startGroup('Update version.json');
         await handleVersion(result.version, result.tag);
         coreExports.endGroup();
+        coreExports.startGroup('Generating Markdown Report');
         const markDownReport = await generateMarkDown(result);
         await coreExports.summary.addRaw(markDownReport, true).write();
         coreExports.setOutput('all-images', result.allImages);

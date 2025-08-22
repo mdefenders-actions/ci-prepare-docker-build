@@ -13,9 +13,14 @@ export async function run(): Promise<void> {
   try {
     core.startGroup('Getting Image tags')
     const result: TagsResult = await getTags()
+    core.endGroup()
+
     core.startGroup('Update version.json')
     await handleVersion(result.version, result.tag)
     core.endGroup()
+
+    core.startGroup('Generating Markdown Report')
+
     const markDownReport = await generateMarkDown(result)
     await core.summary.addRaw(markDownReport, true).write()
     core.setOutput('all-images', result.allImages)
