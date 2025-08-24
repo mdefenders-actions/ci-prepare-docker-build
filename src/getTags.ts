@@ -18,7 +18,11 @@ export async function getTags(): Promise<TagsResult> {
   let branchName
   let data
   let version = core.getInput('default-trunk-version', { required: true })
-  const fullRepoName = `${github.context.repo.owner}/${github.context.repo.repo}`
+  const fullRepoName = `${github.context.repo.owner
+    .toLowerCase()
+    .replace(/[^a-z0-9_.\-/]/g, '-')}/${github.context.repo.repo
+    .toLowerCase()
+    .replace(/[^a-z0-9_.\-/]/g, '-')}`
 
   if (github.context.eventName === 'pull_request') {
     tagSuffix =
