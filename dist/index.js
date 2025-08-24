@@ -31283,7 +31283,11 @@ async function getTags() {
     let branchName;
     let data;
     let version = coreExports.getInput('default-trunk-version', { required: true });
-    const fullRepoName = `${githubExports.context.repo.owner}/${githubExports.context.repo.repo}`;
+    const fullRepoName = `${githubExports.context.repo.owner
+        .toLowerCase()
+        .replace(/[^a-z0-9_.\-/]/g, '-')}/${githubExports.context.repo.repo
+        .toLowerCase()
+        .replace(/[^a-z0-9_.\-/]/g, '-')}`;
     if (githubExports.context.eventName === 'pull_request') {
         tagSuffix =
             'pr-' +

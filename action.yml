@@ -8,19 +8,15 @@ branding:
 inputs:
   version-file:
     description: The version file
-    required: false
     default: version.json
   trunk-branch:
     description: The trunk branch name
-    required: false
     default: main
   default-trunk-version:
     description: Default version to use if not set
-    required: false
     default: '0.0.0'
   default-feature-version:
     description: Default version to use for feature branches
-    required: false
     default: 'SHAPSHOT'
 
 outputs:
